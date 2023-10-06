@@ -5,6 +5,8 @@ const btnRestart = document.getElementById("restart");
 
 const boxSize = 32;
 let snakeSpeed = 80;
+let pulsSize = 1;
+let pulseDirection = 1;
 let record = (localStorage.getItem("Счет") ? localStorage.getItem("Счет") : 0);
 let score = 0;
 let stopSwitchDirection = false;
@@ -23,9 +25,9 @@ recordCup.src = "picture/cup.png";
 
 // создаем объект, хранящий координаты еды, так же создаем еду
 let foodPosition = {};
-randomFood();
-
 let snake = [{ x: boxSize * 9, y: boxSize * 10} ];
+
+randomFood();
 
 document.addEventListener("keydown", switchDirection);
 
@@ -40,8 +42,8 @@ function game() {
 
 function drawGame() {
     context.drawImage(background, 0, 0);
-    context.drawImage(foodImage, foodPosition.x, foodPosition.y, boxSize, boxSize);
     context.drawImage(recordCup, boxSize * 4, boxSize / 1.6);
+    pulsFood();
 
     context.fillStyle = "#0d31d4";
     // отображение каждого элемента змейки путем перебора массива с объеками
@@ -83,7 +85,6 @@ function gameLogic() {
             break;
         }
     }
-    
 
     // Создаем новый сегмент для головы
     let newHead = { x: headX, y: headY };
@@ -91,6 +92,7 @@ function gameLogic() {
     if(newHead.x == foodPosition.x && newHead.y == foodPosition.y) {
         randomFood();
         score++;
+        snakeSpeed = snakeSpeed - snakeSpeed * 0.01;
     } else {
         snake.pop();
     }
@@ -108,6 +110,8 @@ function gameLogic() {
                 localStorage.setItem("Счет", score);
             }
             cancelAnimationFrame(game);
+            upadateScoreAndHightScore(score, record);
+            openModal();
         };
     }
     
@@ -151,6 +155,13 @@ function switchDirection(event) {
 function randomFood() {
     foodPosition.x = (Math.floor(Math.random() * 17 + 1)) * boxSize;
     foodPosition.y = (Math.floor(Math.random() * 15 + 3)) * boxSize;
+    
+    // если яблоко появилось внутри змеи, яблоко появляется в другом месте
+    for(let i = 0; i < snake.length; i++) {
+        if (foodPosition.x === snake[i].x && foodPosition.y === snake[i].y) {
+            randomFood();
+        }
+    }
 }
 
 // смена изображения, установка флага gamePaused
@@ -162,6 +173,32 @@ btnPausedPlay.addEventListener("click", (() => {
     }
     gamePaused = !gamePaused;
 }))
+
+// вывод рекорда и счета на модальное окно
+function upadateScoreAndHightScore(score, record) {
+    const scoreElement = document.getElementById('score');
+    const highScoreElement = document.getElementById('high-score');
+    scoreElement.textContent = score;
+    highScoreElement.textContent = record;
+}
+
+// анимация яблока
+function pulsFood() {
+    pulsSize += 0.01 * pulseDirection;
+
+    if(pulsSize <= 0.7) {
+        pulseDirection = 1;
+    } else if(pulsSize >= 1) {
+        pulseDirection = -1;
+    }
+
+    const foodSize = boxSize * pulsSize;
+
+    const foodX = foodPosition.x - (foodSize - boxSize) / 2;
+    const foodY = foodPosition.y - (foodSize - boxSize) / 2;
+
+    context.drawImage(foodImage, foodX, foodY, foodSize, foodSize);
+}
 
 // запуск игры
 requestAnimationFrame(game);

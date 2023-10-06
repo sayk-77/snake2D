@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +10,18 @@
     <div id="game-container">
         <canvas id="gameSnake" width="608" height="608"></canvas>
         <img id="pausedPlay" src="./picture/paused.png" alt="paused">
-        <img id="restart" src="./picture/reset.png" alt="restart">
+        
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h2>Вы проиграли!</h2>
+                <p>Ваши очки: <span id="score">0</span></p>
+                <p>Рекорд: <span id="high-score">0</span></p>
+                <button id="restart-button">Начать сначала</button>
+            </div>
+        </div>
     </div>
-    <script src="game.js"></script>
+    
+    <script src="/scripts/game.js"></script>
+    <script src="/scripts/modalWindowEndGame.js"></script>
 </body>
 </html>
