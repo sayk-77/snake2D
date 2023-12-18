@@ -15,13 +15,13 @@ let direction;
 let gamePaused = false;
 
 const background = new Image();
-background.src = "/picture/background.png";
+background.src = "../picture/background.png";
 
 const foodImage = new Image();
-foodImage.src = "/picture/food.png";
+foodImage.src = "../picture/food.png";
 
 const recordCup = new Image();
-recordCup.src = "/picture/cup.png";
+recordCup.src = "../picture/cup.png";
 
 // создаем объект, хранящий координаты еды, так же создаем еду
 let foodPosition = {};
@@ -167,9 +167,9 @@ function randomFood() {
 // смена изображения, установка флага gamePaused
 btnPausedPlay.addEventListener("click", (() => {
     if(!gamePaused) {
-        btnPausedPlay.src = "/picture/play.png";
+        btnPausedPlay.src = "../picture/play.png";
     } else if(gamePaused) {
-        btnPausedPlay.src = "/picture/paused.png";
+        btnPausedPlay.src = "../picture/paused.png";
     }
     gamePaused = !gamePaused;
 }))
